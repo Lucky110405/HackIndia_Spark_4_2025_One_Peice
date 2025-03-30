@@ -1,28 +1,20 @@
-const express = require('express');
-const dotenv = require('dotenv');
+import dotenv from "dotenv";
+import connectDB from "./db/db.js";
+import {app} from './app.js'
 
-// Load environment variables
-dotenv.config();
+dotenv.config({
+    path:'./.env'
+})
 
-// Import routes
-const contractRoutes = require('./routes/contract');
-const walletRoutes = require('./routes/wallet');
 
-const app = express();
-const PORT = process.env.PORT || 5000;
 
-// Routes
-app.use('/api/register_asset', contractRoutes);
-app.use('/api/contract', contractRoutes);
-app.use('/api/contract', contractRoutes);
-app.use('/api/wallet', walletRoutes);
 
-// Basic route
-app.get('/', (req, res) => {
-  res.send('DApp Backend API is running');
-});
-
-// Start server
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+connectDB()
+.then(()=>{
+    app.listen(process.env.PORT || 5000,()=>{
+        console.log(`server is running at port : ${process.env.PORT}`);
+    })
+})
+.catch((error)=>{
+    console.log("MONGO db connection failed !!!", error)
+})
