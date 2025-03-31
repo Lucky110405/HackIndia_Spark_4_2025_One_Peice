@@ -14,7 +14,6 @@ export const financialAssetController = {
         try {
             const assetData = req.body;
             
-            // Handle certificate images or scanned documents
             if (req.files?.assetDocuments) {
                 const documentUrls = await Promise.all(
                     req.files.assetDocuments.map(async (file) => {
@@ -88,7 +87,6 @@ export const financialAssetController = {
 
             const newDocs = await Document.create(documents);
 
-            // Update asset with new document references
             asset.documentDetails.documents.push(...newDocs.map(doc => doc._id));
             await asset.save();
 
@@ -126,7 +124,6 @@ export const financialAssetController = {
                 owner: req.user._id
             });
 
-            // Upload to blockchain
             const blockchainResult = await blockchainController.uploadToBlockchain(
                 asset._id,
                 'financial'

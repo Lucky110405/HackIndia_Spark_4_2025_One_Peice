@@ -12,7 +12,6 @@ export const realEstateController = {
         try {
             const propertyData = req.body;
             
-            // Handle property images
             if (req.files?.propertyImages) {
                 const imageUrls = await Promise.all(
                     req.files.propertyImages.map(async (file) => {
@@ -71,7 +70,6 @@ export const realEstateController = {
 
             const newDocs = await Document.create(documents);
 
-            // Update property with new document references
             if (req.body.category === 'Legal_Document') {
                 property.legalInformation.documents.push(...newDocs.map(doc => doc._id));
             } else {
@@ -93,7 +91,6 @@ export const realEstateController = {
                 owner: req.user._id
             });
 
-            // Upload to blockchain
             const blockchainResult = await blockchainController.uploadToBlockchain(
                 property._id,
                 'realestate'

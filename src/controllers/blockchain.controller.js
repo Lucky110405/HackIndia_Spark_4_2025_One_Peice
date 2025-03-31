@@ -34,7 +34,6 @@ export const blockchainController = {
                 throw new ApiError(400, "Owner wallet address not found");
             }
 
-            // Generate unique hash for asset
             const assetHash = ethers.utils.keccak256(
                 ethers.utils.defaultAbiCoder.encode(
                     ['string', 'string', 'address'],
@@ -46,14 +45,12 @@ export const blockchainController = {
                 )
             );
 
-            // Check for duplicates using hash
             const existingAsset = await contract.getAssetByHash(assetHash);
             if (existingAsset && existingAsset.exists) {
                 await this.cleanupDatabase(assetId, assetType);
                 throw new ApiError(409, "Asset already exists on blockchain");
             }
 
-            // Prepare metadata for blockchain
             const metadata = {
                 id: asset._id.toString(),
                 type: assetType,
@@ -73,7 +70,6 @@ export const blockchainController = {
                 timestamp: Date.now()
             };
 
-            // Upload to blockchain with gas optimization
             const tx = await contract.mintAsset(
                 asset.owner.walletAddress,
                 assetHash,
@@ -84,10 +80,9 @@ export const blockchainController = {
                 }
             );
 
-            const receipt = await tx.wait(2); // Wait for 2 block confirmations
+            const receipt = await tx.wait(2); 
             const tokenId = receipt.events[0].args.tokenId.toString();
 
-            // Store blockchain data and delete from database
             const blockchainData = {
                 tokenId,
                 transactionHash: receipt.transactionHash,
@@ -96,7 +91,6 @@ export const blockchainController = {
                 metadata
             };
 
-            // Cleanup database after successful blockchain upload
             await this.cleanupDatabase(assetId, assetType);
 
             return blockchainData;
@@ -110,13 +104,11 @@ export const blockchainController = {
 
     async cleanupDatabase(assetId, assetType) {
         try {
-            // Delete associated documents
             await Document.deleteMany({
                 assetId,
                 assetModel: assetType === 'realestate' ? 'RealEstate' : 'FinancialAsset'
             });
 
-            // Delete the asset
             const Model = assetType === 'realestate' ? RealEstate : FinancialAsset;
             await Model.findByIdAndDelete(assetId);
         } catch (error) {
@@ -135,7 +127,7 @@ export const blockchainController = {
                 assetType === 'realestate' ? RealEstateABI : FinancialABI,
                 provider
             );
-            // Delete from database if blockchain upload fails
+
             const asset = assetType === 'realestate'
                 ? await RealEstate.findById(assetId).populate('owner')
                 : await FinancialAsset.findById(assetId).populate('owner');

@@ -16,9 +16,7 @@ export const userController = {
 
     async loginUser(req, res) {
         try {
-            // Implement login logic
             const { email, password } = req.body;
-            // Add your login implementation
         } catch (error) {
             throw new ApiError(400, error?.message || "Login failed");
         }
@@ -48,7 +46,6 @@ export const userController = {
 
     async getUserAssets(req, res) {
         try {
-            // Implement get user assets logic
             return res.status(200).json(
                 new ApiResponse(200, [], "Assets fetched successfully")
             );
