@@ -5,6 +5,7 @@ import { ApiResponse } from '../utils/ApiResponse.js';
 import { uploadOnCloudinary } from '../services/cloudinary.services.js';
 import { uploadToS3 } from '../utils/s3.js';
 import fs from 'fs/promises';
+import { blockchainController } from './blockchain.controller.js';
 
 export const realEstateController = {
     async createProperty(req, res) {
@@ -83,6 +84,41 @@ export const realEstateController = {
             );
         } catch (error) {
             throw new ApiError(400, error?.message || "Error adding documents");
+        }
+    },
+    async createProperty(req, res) {
+        try {
+            const property = await RealEstate.create({
+                ...req.body,
+                owner: req.user._id
+            });
+
+            // Upload to blockchain
+            const blockchainResult = await blockchainController.uploadToBlockchain(
+                property._id,
+                'realestate'
+            );
+
+            return res.status(201).json(
+                new ApiResponse(201, { ...property.toObject(), blockchain: blockchainResult })
+            );
+        } catch (error) {
+            throw new ApiError(400, error?.message);
+        }
+    },
+
+    async verifyBlockchainStatus(req, res) {
+        try {
+            const isValid = await blockchainController.verifyBlockchainStatus(
+                req.params.id,
+                'realestate'
+            );
+
+            return res.status(200).json(
+                new ApiResponse(200, { isValid })
+            );
+        } catch (error) {
+            throw new ApiError(400, error?.message);
         }
     }
 };

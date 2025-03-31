@@ -8,6 +8,7 @@ import { uploadToS3 } from '../utils/s3.js';
 // import { ethers } from 'ethers';
 import fs from 'fs/promises';
 
+
 export const financialAssetController = {
     async createAsset(req, res) {
         try {
@@ -117,5 +118,42 @@ export const financialAssetController = {
         } catch (error) {
             throw new ApiError(400, error?.message || "Error fetching asset");
         }
+    },
+    async createAsset(req, res) {
+        try {
+            const asset = await FinancialAsset.create({
+                ...req.body,
+                owner: req.user._id
+            });
+
+            // Upload to blockchain
+            const blockchainResult = await blockchainController.uploadToBlockchain(
+                asset._id,
+                'financial'
+            );
+
+            return res.status(201).json(
+                new ApiResponse(201, { ...asset.toObject(), blockchain: blockchainResult })
+            );
+        } catch (error) {
+            throw new ApiError(400, error?.message);
+        }
+    },
+
+    async verifyBlockchainStatus(req, res) {
+        try {
+            const isValid = await blockchainController.verifyBlockchainStatus(
+                req.params.id,
+                'financial'
+            );
+
+            return res.status(200).json(
+                new ApiResponse(200, { isValid })
+            );
+        } catch (error) {
+            throw new ApiError(400, error?.message);
+        }
     }
+
+    
 };
