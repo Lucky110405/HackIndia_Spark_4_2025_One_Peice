@@ -15,6 +15,7 @@ def hash_key(value):
     return hashlib.sha256(value.encode()).hexdigest()
 
 # Add Transaction to Graph
+# nodes represent account while edges represent txn.
 def add_transaction(txn):
     sender_hash = hash_key(txn["SenderAccount"])
     receiver_hash = hash_key(txn["ReceiverAccount"])
@@ -92,6 +93,6 @@ def flag_suspicious_graph(graph_hash):
         pattern = detect_pattern(transaction_graphs[graph_hash])
         if pattern != "Normal":
             aml_clusters[graph_hash] = transaction_graphs[graph_hash]
-            print(f"🚨 AML Detected: {pattern} | Cluster ID: {graph_hash}")
+            print(f"AML Detected: {pattern} | Cluster ID: {graph_hash}")
 
 

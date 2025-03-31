@@ -15,16 +15,16 @@ model.load_state_dict(torch.load("trained_model.pth"))
 model.eval()
 
 # Load New Test Data
-print("📥 Loading New Test Transactions...")
-with open("test_transactions.json", "r") as f:
+print("Loading New Test Transactions...")
+with open("test_transactions_v2.json", "r") as f:
     test_transactions = json.load(f)
 
 # Prepare Graph Data
-print("🔄 Preparing Test Graph Data...")
+print("Preparing Test Graph Data...")
 test_graph, _ = prepare_graph()
 
 # Run Model Predictions
-print("🧠 Running Predictions...")
+print("Running Predictions...")
 with torch.no_grad():
     output = model(test_graph)
     probs = torch.softmax(output, dim=1)  # Convert logits to probabilities
@@ -64,13 +64,13 @@ with open("new_test_results_v2.json", "w") as f:
     json.dump(test_results, f, indent=4)
 
 # **✅ Compute Accuracy Metrics**
-print("\n📊 **Final Test Results:**")
+print("\n**Final Test Results:**")
 cm = confusion_matrix(y_true, y_pred)
 report = classification_report(y_true, y_pred, target_names=[
                                "Normal", "AML"], digits=4)
 
-print("\n🔢 **Confusion Matrix:**\n", cm)
-print("\n📄 **Classification Report:**\n", report)
+print("\n**Confusion Matrix:**\n", cm)
+print("\n**Classification Report:**\n", report)
 
 # **✅ Plot Confusion Matrix**
 plt.figure(figsize=(6, 5))
@@ -90,7 +90,7 @@ plt.ylabel("Number of Transactions")
 plt.title("AML vs. Normal Transactions Detected")
 plt.show()
 
-print("✅ Accuracy analysis complete! Check charts & logs.")
+print("Accuracy analysis complete! Check charts & logs.")
 
 
 # import torch

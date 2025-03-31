@@ -80,7 +80,7 @@ def prepare_graph():
     print("Graph preparation complete.")
 
     if not features:
-        print("❌ No valid features found. Exiting.")
+        print("No valid features found. Exiting.")
         return None, None
 
     # 🚨 Debug: Check Label Distribution
@@ -97,7 +97,7 @@ def train_gnn():
     print("Starting GNN training...")
     data, labels = prepare_graph()
     if data is None:
-        print("❌ Training aborted. No valid data available.")
+        print("Training aborted. No valid data available.")
         return
 
     model = GAT(num_node_features=3, hidden_dim=16, output_dim=2)
@@ -106,14 +106,14 @@ def train_gnn():
 
     # ✅ Ensure both classes exist
     if len(np.unique(labels_np)) < 2:
-        print("⚠️ Warning: Only one class present in dataset! Generating synthetic samples to balance.")
+        print("Warning: Only one class present in dataset! Generating synthetic samples to balance.")
 
         num_samples = len(labels_np)
         new_class = 1 if np.all(labels_np == 0) else 0  # Add the missing class
         synthetic_samples = np.full((num_samples // 5,), new_class)  # Add 20% of missing class
 
         labels_np = np.concatenate([labels_np, synthetic_samples])  # Add new samples
-        print(f"✅ New Label Distribution: {np.bincount(labels_np)}")  # Debugging
+        print(f"New Label Distribution: {np.bincount(labels_np)}")  # Debugging
 
     # Compute class weights after ensuring both classes exist
     class_weights = compute_class_weight(
@@ -137,9 +137,9 @@ def train_gnn():
         if epoch % 20 == 0:
             print(f"Epoch {epoch}, Loss: {loss.item()}")
 
-    print("✅ GNN Training Complete.")
+    print("GNN Training Complete.")
     torch.save(model.state_dict(), "trained_model.pth")
-    print("✅ Model saved as trained_model.pth")
+    print("Model saved as trained_model.pth")
 
 
 if __name__ == "__main__":
