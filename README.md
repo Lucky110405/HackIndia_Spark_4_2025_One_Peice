@@ -6,10 +6,10 @@ language:
 - en
 ---
 
-# HAMI AML Detector 🕵️‍♂️🚨
+# AML Compliance Detection 🕵️‍♂️🚨
 
 ## Overview
-HAMI AML Detector is a powerful graph neural network (GNN) based solution designed for real-time **Anti-Money Laundering (AML)** transaction monitoring. The model dynamically builds transaction graphs and detects suspicious transaction patterns such as:
+AML Compliance Detector is a powerful graph neural network (GNN) based solution designed for real-time **Anti-Money Laundering (AML)** transaction monitoring. The model dynamically builds transaction graphs and detects suspicious transaction patterns such as:
 
 - **Fan-In**
 - **Fan-Out**
@@ -38,13 +38,6 @@ HAMI AML Detector is a powerful graph neural network (GNN) based solution design
 ## Frameworks & Technologies
 - **PyTorch**
 - **PyTorch Geometric**
-- **Kafka** (for real-time integration)
-- **NetworkX** (for graph management)
 
 ## Performance
 The model shows excellent capability in detecting sophisticated AML patterns with high accuracy on simulated transaction datasets. A full performance analysis including confusion matrices and accuracy metrics is provided in the repository.
-
-## How to use the model
-Please visit the repository for detailed instructions:
-```bash
-git clone https://huggingface.co/Ymak7/HAMI-AML-DETECTOR
