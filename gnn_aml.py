@@ -22,7 +22,7 @@ class GAT(nn.Module):
         super(GAT, self).__init__()
         self.conv1 = GATConv(num_node_features, hidden_dim, heads=heads, concat=True)
         self.conv2 = GATConv(hidden_dim * heads, output_dim, heads=1, concat=False)
-        self.dropout = nn.Dropout(0.3)  # Dropout to reduce overfitting
+        self.dropout = nn.Dropout(0.5)  # Dropout to reduce overfitting
 
     def forward(self, data):
         x, edge_index = data.x, data.edge_index
