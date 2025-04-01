@@ -7,7 +7,20 @@ import {ERC721Pausable} from "@openzeppelin/contracts/token/ERC721/extensions/ER
 import {ERC721URIStorage} from "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 
-contract Asset is ERC721, ERC721URIStorage, ERC721Pausable, Ownable {
+contract AssetRegister is ERC721URIStorage, ERC721Pausable, Ownable {
+    
+    uint256 private _nextTokenId;
+    struct Asset {
+        string assetDetails;
+        string docUrl;
+        bool verified;
+    }
+
+    mapping(uint256 => Asset) private assets;
+    mapping(string => bool) private registeredAssets;
+
+    event AssetRegistered(uint256 tokenId, string assetDetails, string docUrl);
+    
     constructor(address initialOwner)
         ERC721("Asset", "AST")
         Ownable(initialOwner)
@@ -21,7 +34,28 @@ contract Asset is ERC721, ERC721URIStorage, ERC721Pausable, Ownable {
         _unpause();
     }
 
-    // The following functions are overrides required by Solidity.
+    function registerAsset(string memory assetDetails, string memory docUrl) public {
+        require(!registeredAssets[assetDetails], "Asset already registered!");
+
+        uint256 tokenId = _nextTokenId++;
+        assets[tokenId] = Asset(assetDetails, docUrl, false);
+        registeredAssets[assetDetails] = true; 
+
+        _safeMint(msg.sender, tokenId);
+        _setTokenURI(tokenId, docUrl);
+
+        emit AssetRegistered(tokenId, assetDetails, docUrl);
+    }
+
+    function verifyAsset(uint256 tokenId) public onlyOwner {
+        require(_ownerOf(tokenId) != address(0), "Asset does not exist");
+        assets[tokenId].verified = true;
+    }
+
+    function getAssetDetails(uint256 tokenId) public view returns (Asset memory) {
+        require(_ownerOf(tokenId) != address(0), "Asset does not exist");
+        return assets[tokenId];
+    }
 
     function _update(address to, uint256 tokenId, address auth)
         internal
@@ -31,15 +65,6 @@ contract Asset is ERC721, ERC721URIStorage, ERC721Pausable, Ownable {
         return super._update(to, tokenId, auth);
     }
 
-    function tokenURI(uint256 tokenId)
-        public
-        view
-        override(ERC721, ERC721URIStorage)
-        returns (string memory)
-    {
-        return super.tokenURI(tokenId);
-    }
-
     function supportsInterface(bytes4 interfaceId)
         public
         view
@@ -47,5 +72,14 @@ contract Asset is ERC721, ERC721URIStorage, ERC721Pausable, Ownable {
         returns (bool)
     {
         return super.supportsInterface(interfaceId);
+    }
+
+        function tokenURI(uint256 tokenId)
+        public
+        view
+        override(ERC721, ERC721URIStorage)
+        returns (string memory)
+    {
+        return super.tokenURI(tokenId);
     }
 }

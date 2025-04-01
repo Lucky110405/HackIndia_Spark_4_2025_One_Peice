@@ -3,25 +3,22 @@ pragma solidity ^0.8.22;
 
 import {IERC721} from "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 
+interface IAssetRegister is IERC721 {
+    function isAssetVerified(uint256 tokenId) external view returns (bool);
+}
 
 contract Transfer {
 
-    uint tokenId;
-    address senderAddress;
-    address receiverAddress;
-    address assetContractAddress;
-    uint timestamp;
-
     event TokenTransferred( uint256 indexed tokenId, address indexed senderAddress, address indexed receiverAddress, address assetContractAddress, uint timestamp );
 
-    function transfer(uint tokenNo, address fromUser, address toUser, address contractAddress) public {
-
-        tokenId = tokenNo;
-        senderAddress = fromUser;
-        receiverAddress = toUser;
-        assetContractAddress = contractAddress;
+    function transfer(uint tokenId, address senderAddress, address receiverAddress, address assetContractAddress) public {
 
         IERC721 asset = IERC721( assetContractAddress );
+
+        require(senderAddress != address(0), "Invalid receiver");
+        require(receiverAddress != address(0), "Invalid sender");
+        
+        require(assetContractAddress != address(0), "Invalid contract");
 
         if(asset.ownerOf(tokenId) == senderAddress ) {
 
