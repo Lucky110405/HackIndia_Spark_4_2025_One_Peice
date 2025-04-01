@@ -18,7 +18,7 @@ const Hero = () => {
           animate={{ y: 0 }}
           className="text-5xl md:text-7xl font-bold mb-8"
         >
-          Secure Asset Tokenization
+          A unified decentralized platform 
         </motion.h1>
         
         <motion.div
@@ -28,7 +28,7 @@ const Hero = () => {
           className="max-w-2xl mb-12"
         >
           <p className="text-xl mb-6">
-            Transform your assets into digital tokens on the blockchain. Secure, transparent, and efficient.
+            Ensures reliable asset ownership and transfers, along with tamper-proof storage and verification of legal documents.
           </p>
           <ul className="space-y-4">
             <li className="flex items-center">
@@ -37,11 +37,11 @@ const Hero = () => {
             </li>
             <li className="flex items-center">
               <CheckIcon className="h-6 w-6 mr-2 text-green-400" />
-              Instant verification
+              Seamless transfers
             </li>
             <li className="flex items-center">
               <CheckIcon className="h-6 w-6 mr-2 text-green-400" />
-              Seamless transfers
+              AI-Powered AML checking
             </li>
           </ul>
         </motion.div>
