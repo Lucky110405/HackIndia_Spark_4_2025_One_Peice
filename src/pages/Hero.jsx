@@ -1,6 +1,10 @@
 import { motion } from 'framer-motion';
+import { CheckIcon } from '@heroicons/react/24/solid';
+import { useNavigate } from 'react-router-dom';
 
 const Hero = () => {
+  const navigate = useNavigate();
+  
   return (
     <motion.div
       initial={{ opacity: 0 }}

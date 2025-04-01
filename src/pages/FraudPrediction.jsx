@@ -1,8 +1,8 @@
 import { motion } from 'framer-motion';
 import { useState } from 'react';
-import { Card } from '../components/Card';
-import { Button } from '../components/Button';
-import { FileUpload } from '../components/FileUpload';
+import Card from '../components/Card';
+import Button from '../components/Button';
+import FileUpload from '../components/FileUpload';
 
 const FraudPrediction = () => {
   const [files, setFiles] = useState([]);
