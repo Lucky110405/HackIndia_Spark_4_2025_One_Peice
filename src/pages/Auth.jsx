@@ -1,15 +1,28 @@
 import { motion } from 'framer-motion';
 import { useState } from 'react';
-import { Formik, Form } from 'formik';
-import * as Yup from 'yup';
+import { useNavigate } from 'react-router-dom';
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
-  const validationSchema = Yup.object({
-    email: Yup.string().email('Invalid email').required('Required'),
-    password: Yup.string().min(6, 'Min 6 characters').required('Required'),
-  });
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    try {
+      // Simple auth logic
+      if (email && password) {
+        // Store user info in localStorage
+        localStorage.setItem('user', JSON.stringify({ email }));
+        // Redirect to asset choice page
+        navigate('/choose-asset');
+      }
+    } catch (error) {
+      console.error('Auth error:', error);
+    }
+  };
 
   return (
     <motion.div
@@ -27,50 +40,36 @@ const Auth = () => {
           {isLogin ? 'Welcome Back' : 'Create Account'}
         </h2>
 
-        <Formik
-          initialValues={{ email: '', password: '' }}
-          validationSchema={validationSchema}
-          onSubmit={(values) => {
-            // Handle auth
-          }}
-        >
-          {({ errors, touched }) => (
-            <Form className="space-y-4">
-              <div>
-                <input
-                  type="email"
-                  name="email"
-                  placeholder="Email"
-                  className="w-full px-4 py-2 border rounded-lg"
-                />
-                {errors.email && touched.email && (
-                  <div className="text-red-500 text-sm">{errors.email}</div>
-                )}
-              </div>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Email"
+              className="w-full px-4 py-2 border rounded-lg"
+            />
+          </div>
 
-              <div>
-                <input
-                  type="password"
-                  name="password"
-                  placeholder="Password"
-                  className="w-full px-4 py-2 border rounded-lg"
-                />
-                {errors.password && touched.password && (
-                  <div className="text-red-500 text-sm">{errors.password}</div>
-                )}
-              </div>
+          <div>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Password"
+              className="w-full px-4 py-2 border rounded-lg"
+            />
+          </div>
 
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                type="submit"
-                className="w-full bg-blue-500 text-white py-2 rounded-lg"
-              >
-                {isLogin ? 'Login' : 'Sign Up'}
-              </motion.button>
-            </Form>
-          )}
-        </Formik>
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            type="submit"
+            className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600"
+          >
+            {isLogin ? 'Login' : 'Sign Up'}
+          </motion.button>
+        </form>
 
         <p className="text-center mt-4">
           {isLogin ? "Don't have an account? " : "Already have an account? "}
