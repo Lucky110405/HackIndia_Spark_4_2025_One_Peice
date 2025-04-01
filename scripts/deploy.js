@@ -1,16 +1,16 @@
-const hre = require("hardhat");
+const { ethers } = require("hardhat");
 
 async function main() {
-  const Asset = await hre.ethers.getContractFactory("AssetNFT");
-  const asset = await Asset.deploy();
-  await asset.deployed();
+    const AssetToken = await ethers.getContractFactory("AssetToken");
+    const assetToken = await AssetToken.deploy();
+    await assetToken.deployed();
 
-  console.log("AssetNFT contract deployed to:", asset.address);
+    console.log("AssetToken deployed to:", assetToken.address);
 }
 
 main()
-  .then(() => process.exit(0))
-  .catch((error) => {
-    console.error(error);
-    process.exit(1);
-  });
+    .then(() => process.exit(0))
+    .catch((error) => {
+        console.error(error);
+        process.exit(1);
+    });
